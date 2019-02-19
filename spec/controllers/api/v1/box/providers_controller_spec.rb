@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Box::ProvidersController, type: :controller do
+RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
   describe 'POST box/:username/:name/version/:version/providers' do
     before do
       user = create(:user, username: 'foo')
@@ -90,7 +90,7 @@ RSpec.describe Box::ProvidersController, type: :controller do
 
     context 'prepare upload' do
       let(:upload_url) do
-        box_upload_url(username: 'foo', name: 'bar', version: '1.0.0')
+        api_v1_box_upload_url(username: 'foo', name: 'bar', version: '1.0.0')
       end
       let(:expected_json_response) do
         "{\"upload_path\":\"#{upload_url}\"}"

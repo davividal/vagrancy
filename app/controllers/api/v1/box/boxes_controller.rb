@@ -1,4 +1,4 @@
-class Box::BoxesController < ApplicationController
+class Api::V1::Box::BoxesController < ApplicationController
   def show
     box = Box.tagged(params[:username], params[:name])
 

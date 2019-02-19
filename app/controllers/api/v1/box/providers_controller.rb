@@ -1,4 +1,4 @@
-class Box::ProvidersController < ApplicationController
+class Api::V1::Box::ProvidersController < ApplicationController
   def create
     @provider = Provider.create_from_params(params, provider_params)
 
@@ -25,7 +25,7 @@ class Box::ProvidersController < ApplicationController
 
   def get_upload_path
     Box.tagged(params[:username], params[:name])
-    { json: { upload_path: box_upload_url } }
+    { json: { upload_path: api_v1_box_upload_url } }
   end
 
   def provider_params

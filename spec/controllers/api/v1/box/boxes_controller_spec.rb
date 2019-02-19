@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Box::BoxesController, type: :controller do
+RSpec.describe Api::V1::Box::BoxesController, type: :controller do
   describe 'GET box/:username/:name' do
     # Packer info:
     #     GET box/:username/:name => 200

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Box::VersionsController, type: :controller do
+RSpec.describe Api::V1::Box::VersionsController, type: :controller do
   describe 'POST box/:username/:name/versions' do
 
     # Packer info:

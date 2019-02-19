@@ -1,4 +1,4 @@
-class Box::VersionsController < ApplicationController
+class Api::V1::Box::VersionsController < ApplicationController
   def create
     @version = Version.create_from_params(params, version_params)
 
