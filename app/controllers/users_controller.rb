@@ -8,6 +8,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def authenticate
+    render status: :ok
+  end
+
   private
 
   def user_params
