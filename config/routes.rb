@@ -23,7 +23,7 @@ Rails.application.routes.draw do
 
       post '/users', to: 'users#create'
 
-      get '/api/v1/authenticate', to: 'users#authenticate'
+      get '/authenticate', to: 'users#authenticate'
     end
   end
 end
