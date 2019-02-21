@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :box do
-    user
+    organization
     name { Faker.App.name.downcase }
   end
 end

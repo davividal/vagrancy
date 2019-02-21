@@ -8,6 +8,8 @@ class CreateVersions < ActiveRecord::Migration[5.2]
       t.boolean :released
 
       t.timestamps
+
+      t.foreign_key :boxes
     end
   end
 end

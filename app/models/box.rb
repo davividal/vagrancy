@@ -1,6 +1,6 @@
 class Box < ApplicationRecord
   has_many :versions
-  belongs_to :user
+  belongs_to :organization
 
   scope(
     :tagged,
@@ -11,20 +11,20 @@ class Box < ApplicationRecord
 
   scope(
     :owned_by,
-    ->(username) { joins(:user).where(users: { username: username }) }
+    ->(name) { joins(:organization).where(organizations: { name: name }) }
   )
 
   def tag
-    "#{user.username}/#{name}"
+    "#{organization.name}/#{name}"
   end
 
   def to_h
-    { tag: tag, versions: versions }
+    { tag: tag, versions: versions_as_hash }
   end
 
-  def versions
-    return [] if @versions.nil? || @versions.empty?
+  def versions_as_hash
+    return [] if versions.nil? || versions.empty?
 
-    @versions.each(&:to_h)
+    versions.map(&:to_h)
   end
 end

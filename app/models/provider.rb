@@ -20,12 +20,12 @@ class Provider < ApplicationRecord
 
   def self.find_from_params(params)
     Provider
-      .joins(version: { box: :user })
+      .joins(version: { box: :organization })
       .where(
         versions: { version: params[:version] },
         providers: { name: params[:provider] },
         boxes: { name: params[:name] },
-        users: { username: params[:username] }
+        organizations: { name: params[:username] }
       )
       .first!
   end

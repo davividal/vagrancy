@@ -15,11 +15,11 @@ class Version < ApplicationRecord
 
   def self.find_from_params(params)
     Version
-      .joins(box: :user)
+      .joins(box: :organization)
       .where(
         version: params[:version],
         boxes: { name: params[:name] },
-        users: { username: params[:username] }
+        organizations: { name: params[:username] }
       )
       .first!
   end

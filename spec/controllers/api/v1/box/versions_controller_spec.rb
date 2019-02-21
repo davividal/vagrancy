@@ -14,18 +14,20 @@ RSpec.describe Api::V1::Box::VersionsController, type: :controller do
     context 'version creation' do
       let(:expected_json_response) { '{"version":"1.0.0"}' }
 
-      before do
+      it 'should return the created version' do
         user = create(:user, username: 'foo')
-        create(:box, name: 'bar', user: user)
+        create(:box, name: 'bar', organization: user.organizations.first)
         version_params = attributes_for(:version, version: '1.0.0')
 
         post :create,
              params: { username: 'foo', name: 'bar', version: version_params }
-      end
 
-      it { expect(subject.response.body).to be_eql(expected_json_response) }
-      it { expect(subject.status).to be_eql(200) }
-      it { expect(Version.count).to be_eql(1) }
+        aggregate_failures do
+          expect(response.body).to be_eql(expected_json_response)
+          expect(response.status).to be_eql(200)
+          expect(Version.count).to be_eql(1)
+        end
+      end
     end
 
     context 'version creation for non-existent box' do
@@ -52,7 +54,7 @@ RSpec.describe Api::V1::Box::VersionsController, type: :controller do
 
     it 'should release a version' do
       user = create(:user, username: 'foo')
-      box = create(:box, name: 'bar', user: user)
+      box = create(:box, name: 'bar', organization: user.organizations.first)
 
       version = create(:version, version: '1.0.0', box: box)
       create(:provider, name: 'virtualbox', version: version)

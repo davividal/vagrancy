@@ -3,11 +3,10 @@ module Api
     class UsersController < ApplicationController
       def create
         user = User.new(user_params)
-        if user.save!
-          render status: :created
-        else
-          render status: :unprocessable_entity
-        end
+
+        render status: :created if user.save!
+      rescue
+        render status: :unprocessable_entity
       end
 
       def authenticate

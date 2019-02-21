@@ -4,7 +4,7 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
   describe 'POST box/:username/:name/version/:version/providers' do
     before do
       user = create(:user, username: 'foo')
-      box = create(:box, name: 'bar', user: user)
+      box = create(:box, name: 'bar', organization: user.organizations.first)
       create(:version, version: '1.0.0', box: box)
     end
 
@@ -83,7 +83,7 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
 
     before do
       user = create(:user, username: 'foo')
-      box = create(:box, name: 'bar', user: user)
+      box = create(:box, name: 'bar', organization: user.organizations.first)
       version = create(:version, version: '1.0.0', box: box)
       create(:provider, name: 'virtualbox', version: version)
     end
@@ -129,7 +129,7 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
   describe 'PUT UploadPath' do
     before do
       user = create(:user, username: 'foo')
-      box = create(:box, name: 'bar', user: user)
+      box = create(:box, name: 'bar', organization: user.organizations.first)
       version = create(:version, version: '1.0.0', box: box)
       create(:provider, name: 'virtualbox', version: version)
     end

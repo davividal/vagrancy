@@ -8,6 +8,8 @@ class CreateProviders < ActiveRecord::Migration[5.2]
       t.references :version
 
       t.timestamps
+
+      t.foreign_key :versions
     end
   end
 end
