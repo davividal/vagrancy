@@ -6,7 +6,7 @@ module Api
           @provider = Provider.create_from_params(params, provider_params)
 
           render json: @provider.to_h if @provider.save!
-        rescue ActiveRecord::RecordInvalid
+        rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
           render status: :not_found
         end
 

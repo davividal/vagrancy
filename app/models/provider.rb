@@ -5,7 +5,7 @@ class Provider < ApplicationRecord
   validates_presence_of :version
 
   def self.create_from_params(params, provider_params)
-    box = Box.owned_by(params[:username]).named(params[:name]).first
+    box = Box.tagged(params[:username], params[:name])
     version = Version.from_box(box).find_by(version: params[:version])
 
     provider = Provider.new(provider_params)

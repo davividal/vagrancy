@@ -20,7 +20,7 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
     context 'valid virtualbox' do
       let(:expected_json_response) { '{"name":"virtualbox"}' }
 
-      before do
+      it 'should return the provider' do
         provider_params = attributes_for(:provider)
         post :create,
              params: {
@@ -29,17 +29,19 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
                version: '1.0.0',
                provider: provider_params
              }
-      end
 
-      it { expect(subject.status).to be_eql(200) }
-      it { expect(subject.response.body).to be_eql(expected_json_response) }
-      it { expect(Provider.count).to be_eql(1) }
+        aggregate_failures do
+          expect(response.status).to be_eql(200)
+          expect(response.body).to be_eql(expected_json_response)
+          expect(Provider.count).to be_eql(1)
+        end
+      end
     end
 
     context 'valid parallels' do
       let(:expected_json_response) { '{"name":"parallels"}' }
 
-      before do
+      it 'should return the provider' do
         provider_params = attributes_for(:provider, name: 'parallels')
         post :create,
              params: {
@@ -48,11 +50,13 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
                version: '1.0.0',
                provider: provider_params
              }
-      end
 
-      it { expect(subject.status).to be_eql(200) }
-      it { expect(subject.response.body).to be_eql(expected_json_response) }
-      it { expect(Provider.count).to be_eql(1) }
+        aggregate_failures do
+          expect(response.status).to be_eql(200)
+          expect(response.body).to be_eql(expected_json_response)
+          expect(Provider.count).to be_eql(1)
+        end
+      end
     end
 
     context 'provider creation for non-existent version' do
@@ -81,13 +85,6 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
     #     	UploadPath string `json:"upload_path"`
     #     }
 
-    before do
-      user = create(:user, username: 'foo')
-      box = create(:box, name: 'bar', organization: user.organizations.first)
-      version = create(:version, version: '1.0.0', box: box)
-      create(:provider, name: 'virtualbox', version: version)
-    end
-
     context 'prepare upload' do
       let(:upload_url) do
         api_v1_box_upload_url(username: 'foo', name: 'bar', version: '1.0.0')
@@ -97,6 +94,13 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
       end
 
       before do
+        user = create(:user, username: 'foo')
+        box = create(:box, name: 'bar', organization: user.organizations.first)
+        version = create(:version, version: '1.0.0', box: box)
+        create(:provider, name: 'virtualbox', version: version)
+      end
+
+      it 'should return the upload path for the artifact' do
         get :upload_path,
             params: {
               username: 'foo',
@@ -104,14 +108,16 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
               version: '1.0.0',
               provider: 'virtualbox'
             }
-      end
 
-      it { expect(subject.response.body).to be_eql(expected_json_response) }
-      it { expect(subject.status).to be_eql(200) }
+        aggregate_failures do
+          expect(response.body).to be_eql(expected_json_response)
+          expect(response.status).to be_eql(200)
+        end
+      end
     end
 
     context 'invalid data' do
-      before do
+      it 'should return 404' do
         get :upload_path,
             params: {
               username: 'invalid',
@@ -119,20 +125,16 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
               version: '1.0.0',
               provider: 'invalid'
             }
-      end
 
-      it { expect(subject.response.body).to be_eql(' ') }
-      it { expect(subject.status).to be_eql(404) }
+        aggregate_failures do
+          expect(response.body).to be_eql(' ')
+          expect(response.status).to be_eql(404)
+        end
+      end
     end
   end
 
   describe 'PUT UploadPath' do
-    before do
-      user = create(:user, username: 'foo')
-      box = create(:box, name: 'bar', organization: user.organizations.first)
-      version = create(:version, version: '1.0.0', box: box)
-      create(:provider, name: 'virtualbox', version: version)
-    end
 
     # Packer info:
     #     PUT UploadPath, file => 200
@@ -146,6 +148,14 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
       end
 
       before do
+        user = create(:user, username: 'foo')
+        box = create(:box, name: 'bar', organization: user.organizations.first)
+        version = create(:version, version: '1.0.0', box: box)
+        create(:provider, name: 'virtualbox', version: version)
+      end
+
+      it 'should store the uploaded artifcat' do
+
         put :upload_path,
             params: {
               username: 'foo',
@@ -154,10 +164,12 @@ RSpec.describe Api::V1::Box::ProvidersController, type: :controller do
               provider: 'virtualbox',
               artifact: artifact_file
             }
-      end
 
-      it { expect(subject.status).to be_eql(200) }
-      it { expect(ActiveStorage::Attachment.count).to be_eql(1) }
+        aggregate_failures do
+          expect(response.status).to be_eql(200)
+          expect(ActiveStorage::Attachment.count).to be_eql(1)
+        end
+      end
     end
   end
 end

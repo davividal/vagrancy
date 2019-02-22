@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
@@ -9,13 +11,18 @@ Rails.application.routes.draw do
             post '/versions', to: 'versions#create'
 
             scope 'version' do
-              post '/:version/providers', to: 'providers#create'
+              post '/:version/providers',
+                   to: 'providers#create',
+                   constraints: { version: %r{[^\/]+} }
 
               match '/:version/provider/:provider/upload' => 'providers#upload_path',
-                    via: [:put, :get],
-                    as: 'upload'
+                    via: %i[put get],
+                    as: 'upload',
+                    constraints: { version: %r{[^\/]+} }
 
-              put '/:version/release', to: 'versions#release'
+              put '/:version/release',
+                  to: 'versions#release',
+                  constraints: { version: %r{[^\/]+} }
             end
           end
         end
